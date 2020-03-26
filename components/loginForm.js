@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { Image, Platform, StyleSheet, TextInput, Text, TouchableOpacity, View } from 'react-native';
-import { ScrollView, State } from 'react-native-gesture-handler';
-import * as WebBrowser from 'expo-web-browser';
-import {CheckBox, colors} from 'react-native-elements'
-import PasswordToggle from '../components/passwordViewToggle'
+import {CheckBox} from 'react-native-elements'
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons'
 
 import { MonoText } from '../components/StyledText';
@@ -14,19 +11,30 @@ export default function LoginForm() {
     const [visiblePassword,toggleVisiblePassword]=React.useState(true)
     const [passwordLength,setPasswordLength]=React.useState('')
     const [invalidPassword,setInvalidPassword]= React.useState(false)
+    const [password, setPassword] = React.useState("")
+
+
     validatePassword = (text)=>
     {  
-        setPasswordLength(text.length)
-             if(passwordLength.length < 10){
-                return  setInvalidPassword(true)
-             } 
-                 setInvalidPassword(false)
-             
-                
-             
 
-      
+        if (text.length < 10) {
+            setPassword(text)
+            return setInvalidPassword(true)
+        }
+
+        setInvalidPassword(false)
+        setPassword(text)
+            
+
+        // setPasswordLength(text.length)
+        // if(passwordLength.length < 10){
+        //     return  setInvalidPassword(true)
+        // } 
+            
+        // setInvalidPassword(false)
     }
+
+
     onIconPress=()=>{
         let iconName=(visiblePassword) ? 'eye-off' : 'eye'
         toggleVisiblePassword(!visiblePassword)
@@ -51,10 +59,7 @@ export default function LoginForm() {
             <View style={styles.TextInput}>
                 
                 <TextInput onChangeText={(text) => {
-                    if(passwordLength.length < 10){
-                        validatePassword(text)
-                    }
-                    
+                    validatePassword(text)
                 }}
                 style={{flex:1}} 
                 secureTextEntry={false} />
@@ -63,9 +68,9 @@ export default function LoginForm() {
                 </TouchableOpacity>
                  
             </View>
-            {invalidPassword && <Text>enter a valid pass</Text>}
+            {invalidPassword && <Text style={{color: 'red'}}>Please enter a valid password</Text>}
              
-            <CheckBox containerStyle={styles.checkbox} textStyle ={styles.bluetext} title= 'Terms & Conditions'/>
+            <CheckBox containerStyle={styles.checkbox} textStyle ={styles.bluetext} title={"Terms & Conditions"}/>
             <TouchableOpacity style={styles.button}>
         <Text style ={styles.btnText}>Login</Text>
             </TouchableOpacity>
@@ -151,11 +156,11 @@ const styles = StyleSheet.create({
     },
     TextInput:{
         alignSelf:'stretch',
-        paddingTop:0,
         marginBottom:10,
         borderBottomWidth:1,
         borderBottomColor:'#ECEFF2',
-        flexDirection:'row'
+        flexDirection:'row',
+        paddingVertical: 5
 
     },
     logIn:{
