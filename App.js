@@ -9,6 +9,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import useLinking from './navigation/useLinking';
 import HomeScreen from './screens/HomeScreen';
+import nextScreen from './screens/nextScreen';
+
+import LoginForm from './components/loginForm';
 
 const Stack = createStackNavigator();
 
@@ -53,6 +56,7 @@ export default function App(props) {
         <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
           <Stack.Navigator screenOptions={{headerShown:false}}>
             <Stack.Screen name="Login" component={HomeScreen} />
+            <Stack.Screen name="nextScreen" component={nextScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>

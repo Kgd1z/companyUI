@@ -10,8 +10,8 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
        
-     <LoginForm/>
-
+     <LoginForm />
+ 
     </View>
   );
 }

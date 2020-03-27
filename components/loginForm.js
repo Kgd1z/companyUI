@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Image, Platform, StyleSheet, TextInput, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Platform, StyleSheet, TextInput, Text, TouchableOpacity, View, ShadowPropTypesIOS } from 'react-native';
 import {CheckBox} from 'react-native-elements'
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 
 import { MonoText } from '../components/StyledText';
 
@@ -12,7 +13,10 @@ export default function LoginForm() {
     const [passwordLength,setPasswordLength]=React.useState('')
     const [invalidPassword,setInvalidPassword]= React.useState(false)
     const [password, setPassword] = React.useState("")
+    const [invalidPhoneNumber, setInvalidPhoneNumber] = React.useState('')
+    const [checked,setChecked] = React.useState(false)
 
+  
 
     validatePassword = (text)=>
     {  
@@ -25,33 +29,41 @@ export default function LoginForm() {
         setInvalidPassword(false)
         setPassword(text)
             
-
-        // setPasswordLength(text.length)
-        // if(passwordLength.length < 10){
-        //     return  setInvalidPassword(true)
-        // } 
-            
-        // setInvalidPassword(false)
     }
+    validatePhoneNumber = (text)=>{
+
+        if(text.length !== 10){
+            setPhoneNumber(text)
+            return setInvalidPhoneNumber(true)
+        }
+        setInvalidPhoneNumber(false)
+        setPhoneNumber(text)
+
+    }
+   
 
 
-    onIconPress=()=>{
+    onIconPress=() => {
         let iconName=(visiblePassword) ? 'eye-off' : 'eye'
         toggleVisiblePassword(!visiblePassword)
         setIconName(iconName)
     }
-
+    const navigation = useNavigation()
     return (
         
         <View style={styles.loginForm}>
             <Text style={styles.header}>THE COMPANY</Text>
             <Text style={styles.logIn}>Log In</Text>
             <Text style={styles.header}>Phone Number</Text>
-            <TextInput style={styles.TextInput} 
-                onChangeText={(text)=> {
-                    
-                }}
+            <TextInput style={styles.TextInput} onChangeText ={(text)=>{
+                validatePhoneNumber(text)
+            }}
             />
+            <Text>
+                {invalidPhoneNumber && <Text style={{ color: 'red' }}>Please enter a valid phone number.</Text>}
+
+            </Text>
+            
             <Text style={styles.header}>Email</Text>
             <TextInput style = {styles.TextInput} />
             <Text style={styles.header}>Password</Text>
@@ -62,16 +74,23 @@ export default function LoginForm() {
                     validatePassword(text)
                 }}
                 style={{flex:1}} 
-                secureTextEntry={false} />
+                secureTextEntry={visiblePassword} />
                 <TouchableOpacity onPress={onIconPress}>
                     <Icon color='grey' name={iconName} size={20} />
                 </TouchableOpacity>
                  
             </View>
-            {invalidPassword && <Text style={{color: 'red'}}>Please enter a valid password</Text>}
+            {invalidPassword && <Text style={{color: 'red'}}>Password must exceed 10 characters.</Text>}
              
-            <CheckBox containerStyle={styles.checkbox} textStyle ={styles.bluetext} title={"Terms & Conditions"}/>
-            <TouchableOpacity style={styles.button}>
+            <CheckBox onPress={
+                ()=>{
+                    setChecked(!checked)
+                }
+            } containerStyle={styles.checkbox} textStyle ={styles.bluetext} title={"Terms & Conditions"} checked={checked}/>
+            
+            <TouchableOpacity style={styles.button} onPress={()=>{
+                 navigation.navigate('nextScreen')
+            }}>
         <Text style ={styles.btnText}>Login</Text>
             </TouchableOpacity>
             <Text style={{ paddingBottom: 70 }}>
@@ -147,7 +166,7 @@ const styles = StyleSheet.create({
     },
     header:{
         fontSize:15,
-        color:'grey',
+        color:'#B2BBC7',
         paddingBottom:10,
         marginBottom:10,
         marginTop:10,
@@ -156,11 +175,11 @@ const styles = StyleSheet.create({
     },
     TextInput:{
         alignSelf:'stretch',
-        marginBottom:10,
+        marginBottom:0.7,
         borderBottomWidth:1,
         borderBottomColor:'#ECEFF2',
         flexDirection:'row',
-        paddingVertical: 5
+        paddingVertical: 1
 
     },
     logIn:{
